@@ -1445,6 +1445,45 @@ GET http://localhost/api/complaints/my?status=resolved&category=electricity
 
 ---
 
+### Feedback — Submit *(Protected, Student)*
+
+Submit the facility ratings and suggestion shown on the mobile feedback form.
+
+**`POST /api/student/feedback`**
+
+Requires a student Bearer token. `room_rating`, `mess_rating`, and `security_rating` are required integers from 1 to 5. `comment` (the web form field) or `comments` is optional text up to 1,000 characters. Set `is_anonymous` to `true` to store the feedback without a linked student user; anonymous submissions do not include the student's identity in feedback notifications or audit entries.
+
+```json
+{
+  "room_rating": 4,
+  "mess_rating": 5,
+  "security_rating": 3,
+  "comment": "Please improve the study area.",
+  "is_anonymous": false
+}
+```
+
+**Response `201`**
+```json
+{
+  "status": "success",
+  "message": "Feedback submitted successfully.",
+  "feedback": {
+    "id": 24,
+    "room_rating": 4,
+    "mess_rating": 5,
+    "security_rating": 3,
+    "staff_rating": null,
+    "comments": "Please improve the study area.",
+    "is_anonymous": false,
+    "status": "pending",
+    "created_at": "2026-10-11T17:00:00.000000Z"
+  }
+}
+```
+
+---
+
 ### 23. Visitors — Log Request *(Protected)*
 
 Student submits a visitor request for a specific date. The request starts with `status = pending` and requires admin approval before the visitor can enter.

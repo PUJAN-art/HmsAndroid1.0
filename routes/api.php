@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AdminController as ApiAdminController;
 use App\Http\Controllers\Api\AttendanceController as ApiAttendanceController;
 use App\Http\Controllers\Api\ComplaintController as ApiComplaintController;
 use App\Http\Controllers\Api\FeeController;
+use App\Http\Controllers\Api\FeedbackController as ApiFeedbackController;
 use App\Http\Controllers\Api\MobileAuthController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\NoticeController as ApiNoticeController;
@@ -96,6 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('attendance/checkout',  [ApiAttendanceController::class, 'checkOut']);
         Route::get('complaints',            [ApiComplaintController::class, 'myComplaints']);
         Route::post('complaints',           [ApiComplaintController::class, 'store']);
+        Route::post('feedback',             [ApiFeedbackController::class, 'store']);
         Route::get('visitors',              [ApiVisitorController::class, 'myVisitors']);
         Route::post('visitors',             [ApiVisitorController::class, 'store']);
         Route::get('notices',               [ApiNoticeController::class, 'index']);
