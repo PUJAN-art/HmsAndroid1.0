@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::resource('visitors', \App\Http\Controllers\VisitorController::class)->only(['index', 'store', 'update']);
         Route::get('/fees/payments', [\App\Http\Controllers\FeeController::class, 'paymentReviews'])->name('fees.payments.index');
+        Route::get('/fees/payments/{payment}/receipt', [\App\Http\Controllers\FeeController::class, 'showPaymentReceipt'])->name('fees.payments.receipt');
         Route::get('/fees/payments/{payment}/proof', [\App\Http\Controllers\FeeController::class, 'showPaymentProof'])->name('fees.payments.proof');
         Route::post('/fees/payments/{payment}/review', [\App\Http\Controllers\FeeController::class, 'reviewPayment'])->name('fees.payments.review');
         Route::resource('fees', \App\Http\Controllers\FeeController::class)->only(['index', 'show']);

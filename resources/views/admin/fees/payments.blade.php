@@ -82,7 +82,9 @@
                                     <span class="rounded-md bg-red-50 px-4 py-2 text-center text-sm text-red-700">No proof image attached</span>
                                 @endif
 
-                                @if($payment->status === 'pending')
+                                @if($payment->status === 'accepted')
+                                    <a href="{{ route('admin.fees.payments.receipt', $payment) }}" class="inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">View receipt</a>
+                                @elseif($payment->status === 'pending')
                                     <form method="POST" action="{{ route('admin.fees.payments.review', $payment) }}" class="space-y-2">
                                         @csrf
                                         <label for="review-remark-{{ $payment->id }}" class="block text-sm font-medium text-gray-700">Review remark</label>

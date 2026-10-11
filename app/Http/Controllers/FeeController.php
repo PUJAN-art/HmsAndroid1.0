@@ -56,6 +56,15 @@ class FeeController extends Controller
         return response()->file(Storage::disk('local')->path($payment->proof_path));
     }
 
+    public function showPaymentReceipt(Payment $payment)
+    {
+        abort_unless($payment->status === 'accepted', 404);
+
+        $payment->load(['fee.student.bed.room', 'reviewer']);
+
+        return view('admin.fees.payment-receipt', compact('payment'));
+    }
+
     public function submitPayment(Request $request, FeePaymentService $paymentService): RedirectResponse
     {
         $validated = $request->validate([

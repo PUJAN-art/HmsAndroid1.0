@@ -138,6 +138,64 @@ class FeePaymentTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_view_and_print_a_receipt_for_an_accepted_payment(): void
+    {
+        $student = User::factory()->create([
+            'role' => 'student',
+            'name' => 'Receipt Student',
+            'student_id_number' => 'STU-123',
+        ]);
+        $admin = User::factory()->create(['role' => 'admin', 'name' => 'Receipt Admin']);
+        $fee = $this->createFee($student);
+        $fee->update(['status' => 'paid']);
+        $payment = $fee->payments()->create([
+            'amount' => $fee->amount,
+            'date' => now()->toDateString(),
+            'method' => 'bank_transfer',
+            'status' => 'accepted',
+            'transaction_id' => 'BANK-REF-123',
+            'student_remark' => 'Transfer completed.',
+            'admin_remark' => 'Verified against bank statement.',
+            'reviewed_by' => $admin->id,
+            'reviewed_at' => now(),
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.fees.payments.receipt', $payment))
+            ->assertOk()
+            ->assertSee('Payment Receipt')
+            ->assertSee('PAY-'.str_pad((string) $payment->id, 6, '0', STR_PAD_LEFT))
+            ->assertSee('Receipt Student')
+            ->assertSee('STU-123')
+            ->assertSee('Bank transfer')
+            ->assertSee('BANK-REF-123')
+            ->assertSee('Rs 1,250.00')
+            ->assertSee('Verified against bank statement.')
+            ->assertSee('Print receipt');
+    }
+
+    public function test_receipt_is_only_available_for_accepted_payments(): void
+    {
+        $student = User::factory()->create(['role' => 'student']);
+        $admin = User::factory()->create(['role' => 'admin']);
+        $fee = $this->createFee($student);
+        $payment = $fee->payments()->create([
+            'amount' => $fee->amount,
+            'date' => now()->toDateString(),
+            'method' => 'bank_transfer',
+            'status' => 'pending',
+            'student_remark' => 'Awaiting review.',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.fees.payments.receipt', $payment))
+            ->assertNotFound();
+
+        $this->actingAs($student)
+            ->get(route('admin.fees.payments.receipt', $payment))
+            ->assertForbidden();
+    }
+
     public function test_admin_has_a_dedicated_payment_review_page_with_status_filters(): void
     {
         Storage::fake('local');
@@ -161,7 +219,8 @@ class FeePaymentTest extends TestCase
             ->assertSee('Fee Payment Reviews')
             ->assertSee('Payment Review Student')
             ->assertSee('Transfer complete.')
-            ->assertSee(route('admin.fees.payments.proof', $pendingPayment), false);
+            ->assertSee(route('admin.fees.payments.proof', $pendingPayment), false)
+            ->assertDontSee(route('admin.fees.payments.receipt', $pendingPayment), false);
 
         $this->actingAs($admin)
             ->get(route('admin.fees.payments.index', ['status' => 'accepted']))
