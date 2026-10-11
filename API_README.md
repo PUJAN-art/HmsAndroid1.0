@@ -1778,9 +1778,23 @@ Laravel default password rules apply:
 | `GET` | `http://localhost/api/rooms` | ❌ | List all rooms with bed counts |
 | `GET` | `http://localhost/api/rooms/available` | ❌ | List only available rooms |
 | `GET` | `http://localhost/api/rooms/{id}` | ❌ | Single room with full bed list |
+| `GET` | `http://localhost/api/student/rooms` | ✅ student | Student room list (compatibility path) |
+| `GET` | `http://localhost/api/student/rooms/available` | ✅ student | Available student rooms |
+| `POST` | `http://localhost/api/student/rooms/{id}/request` | ✅ student | Request the room currently being viewed |
+| `POST` | `http://localhost/api/room-requests` | ✅ student | Submit a room request with `room_id` in JSON |
+| `GET` | `http://localhost/api/student/room-requests` | ✅ student | List the student's room requests |
+| `GET` | `http://localhost/api/student/room-requests/{id}` | ✅ student | Get one of the student's room requests |
+| `DELETE` | `http://localhost/api/student/room-requests/{id}` | ✅ student | Cancel a pending room request |
 | `POST` | `http://localhost/api/auth/logout` | ✅ | Logout |
 | `GET` | `http://localhost/api/auth/me` | ✅ | Get current user |
 | `GET` | `http://localhost/api/student/profile` | ✅ | Get student profile + room info |
+| `GET` | `http://localhost/api/student/fees` | ✅ student | Student fee records and summary |
+| `GET` | `http://localhost/api/student/fees/receipts` | ✅ student | Student payment receipts |
+| `GET` | `http://localhost/api/student/attendance` | ✅ student | Student attendance and monthly summary |
+| `POST` | `http://localhost/api/student/attendance/checkin` | ✅ student | Record today's check-in |
+| `POST` | `http://localhost/api/student/attendance/checkout` | ✅ student | Record today's check-out |
+| `GET` | `http://localhost/api/student/complaints` | ✅ student | List student's complaints |
+| `POST` | `http://localhost/api/student/complaints` | ✅ student | Submit a complaint |
 | `GET` | `http://localhost/api/fees/my` | ✅ | Student fee records + summary + receipts |
 | `GET` | `http://localhost/api/fees/receipts` | ✅ | Student payment receipts list |
 | `GET` | `http://localhost/api/attendance/my` | ✅ | Student attendance records + monthly summary |
@@ -1795,6 +1809,9 @@ Laravel default password rules apply:
 | `GET` | `http://localhost/api/notices` | ✅ | List all notices |
 | `POST` | `http://localhost/api/admin/login` | ❌ | Admin login |
 | `GET` | `http://localhost/api/admin/dashboard` | ✅ | Admin dashboard counts |
+| `GET` | `http://localhost/api/admin/students` | ✅ admin | Paginated student directory; optional `search` and `per_page` |
+| `GET` | `http://localhost/api/admin/students/pending` | ✅ admin | Students awaiting approval |
+| `GET` | `http://localhost/api/admin/students/{id}` | ✅ admin | Student profile and room assignment |
 
 ---
 

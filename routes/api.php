@@ -78,14 +78,36 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/password/reset',     [MobileAuthController::class, 'resetPassword']);
 
     // ── Student protected endpoints ───────────────────────────────────────
-    Route::prefix('student')->group(function () {
+    Route::prefix('student')->middleware('role:student')->group(function () {
         Route::get('profile',              [MobileAuthController::class, 'studentProfile']);
+        Route::get('rooms',                [RoomController::class, 'index']);
+        Route::get('rooms/available',       [RoomController::class, 'available']);
+        Route::get('rooms/{id}',            [RoomController::class, 'show']);
+        Route::post('rooms/{id}/request',   [\App\Http\Controllers\Api\RoomRequestController::class, 'storeForRoom']);
+        Route::get('room-requests',         [\App\Http\Controllers\Api\RoomRequestController::class, 'index']);
+        Route::post('room-requests',        [\App\Http\Controllers\Api\RoomRequestController::class, 'store']);
+        Route::get('room-requests/{id}',    [\App\Http\Controllers\Api\RoomRequestController::class, 'show']);
+        Route::delete('room-requests/{id}', [\App\Http\Controllers\Api\RoomRequestController::class, 'cancel']);
+        Route::get('fees',                  [FeeController::class, 'myFees']);
+        Route::get('fees/receipts',         [FeeController::class, 'myReceipts']);
+        Route::get('attendance',            [ApiAttendanceController::class, 'myAttendance']);
+        Route::post('attendance/checkin',   [ApiAttendanceController::class, 'checkIn']);
+        Route::post('attendance/checkout',  [ApiAttendanceController::class, 'checkOut']);
+        Route::get('complaints',            [ApiComplaintController::class, 'myComplaints']);
+        Route::post('complaints',           [ApiComplaintController::class, 'store']);
+        Route::get('visitors',              [ApiVisitorController::class, 'myVisitors']);
+        Route::post('visitors',             [ApiVisitorController::class, 'store']);
+        Route::get('notices',               [ApiNoticeController::class, 'index']);
     });
 
     // ── Fee endpoints (student only) ──────────────────────────────────────
     Route::prefix('fees')->group(function () {
         Route::get('my',       [FeeController::class, 'myFees']);      // GET /api/fees/my
         Route::get('receipts', [FeeController::class, 'myReceipts']);  // GET /api/fees/receipts
+    });
+
+    Route::middleware('role:student')->group(function () {
+        Route::post('room-requests', [\App\Http\Controllers\Api\RoomRequestController::class, 'store']);
     });
 
     // ── Attendance endpoints (student only) ───────────────────────────────
@@ -113,7 +135,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // ── Admin protected endpoints ──────────────────────────────────────────
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('dashboard',            [ApiAdminController::class, 'dashboard']); // GET /api/admin/dashboard
+        Route::get('students/pending',     [ApiAdminController::class, 'pendingStudents']);
+        Route::get('students',             [ApiAdminController::class, 'students']);
+        Route::get('students/{id}',        [ApiAdminController::class, 'showStudent']);
     });
 });
