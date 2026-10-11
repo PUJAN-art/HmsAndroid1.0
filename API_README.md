@@ -20,28 +20,29 @@
 7. [Student Profile](#6-student-profile--protected)
 8. [Student Activity Logs](#student-activity-logs-protected)
 9. [Student Messages](#student-messages-protected)
-10. [Logout](#7-logout--protected)
-11. [Get Current User](#8-get-current-user--protected)
-12. [Change Password](#9-change-password--protected)
-13. [Password Reset — Send OTP](#10-password-reset--send-otp)
-14. [Password Reset — Verify OTP](#11-password-reset--verify-otp)
-15. [Password Reset — Set New Password](#12-password-reset--set-new-password--protected)
-16. [Rooms — List All](#13-rooms--list-all)
-17. [Rooms — Available Only](#14-rooms--available-only)
-18. [Rooms — Single Detail](#15-rooms--single-detail)
-19. [Fees — My Fees](#16-fees--my-fees--protected)
-20. [Fees — My Receipts](#17-fees--my-receipts--protected)
-21. [Attendance — My Records](#18-attendance--my-records--protected)
-22. [Attendance — Check In](#19-attendance--check-in--protected)
-23. [Attendance — Check Out](#20-attendance--check-out--protected)
-24. [Complaints — Submit](#21-complaints--submit--protected)
-25. [Complaints — My Complaints](#22-complaints--my-complaints--protected)
-26. [Visitors — Log Request](#23-visitors--log-request--protected)
-27. [Visitors — My Visitors](#24-visitors--my-visitors--protected)
-28. [Notices — List All](#25-notices--list-all--protected)
-29. [Admin Login](#26-admin-login)
-30. [Admin Dashboard](#27-admin-dashboard--protected)
-31. [Error Reference](#error-reference)
+10. [Notifications](#notifications-protected)
+11. [Logout](#7-logout--protected)
+12. [Get Current User](#8-get-current-user--protected)
+13. [Change Password](#9-change-password--protected)
+14. [Password Reset — Send OTP](#10-password-reset--send-otp)
+15. [Password Reset — Verify OTP](#11-password-reset--verify-otp)
+16. [Password Reset — Set New Password](#12-password-reset--set-new-password--protected)
+17. [Rooms — List All](#13-rooms--list-all)
+18. [Rooms — Available Only](#14-rooms--available-only)
+19. [Rooms — Single Detail](#15-rooms--single-detail)
+20. [Fees — My Fees](#16-fees--my-fees--protected)
+21. [Fees — My Receipts](#17-fees--my-receipts--protected)
+22. [Attendance — My Records](#18-attendance--my-records--protected)
+23. [Attendance — Check In](#19-attendance--check-in--protected)
+24. [Attendance — Check Out](#20-attendance--check-out--protected)
+25. [Complaints — Submit](#21-complaints--submit--protected)
+26. [Complaints — My Complaints](#22-complaints--my-complaints--protected)
+27. [Visitors — Log Request](#23-visitors--log-request--protected)
+28. [Visitors — My Visitors](#24-visitors--my-visitors--protected)
+29. [Notices — List All](#25-notices--list-all--protected)
+30. [Admin Login](#26-admin-login)
+31. [Admin Dashboard](#27-admin-dashboard--protected)
+32. [Error Reference](#error-reference)
 
 ---
 
@@ -587,6 +588,21 @@ Request body:
 ```
 
 Successful replies return HTTP `201` with the created message in `data`. The API uses the same notifications and audit logging as the web reply flow. Students can only view or reply to messages in which they are the sender or recipient, and can reply only to messages they received.
+
+---
+
+### Notifications *(Protected)*
+
+Notification endpoints operate only on the authenticated user's notifications. Send the Sanctum token in `Authorization: Bearer <token>`.
+
+- `GET /api/notifications` lists notifications newest first. Optional filters: `type`, `status=all|read|unread`, `per_page=1..100`, and `page`. Response includes `data`, `pagination`, and `unread_count`.
+- `GET /api/notifications/recent` returns the latest five notifications in `notifications`.
+- `GET /api/notifications/unread-count` returns `unread_count`.
+- `POST /api/notifications/{id}/read` marks one of the user's notifications as read.
+- `POST /api/notifications/read-all` marks all of the user's unread notifications as read and returns the affected `count`.
+- `DELETE /api/notifications/{id}` deletes one of the user's notifications.
+
+Requests to a notification owned by another user return `404`.
 
 ---
 
@@ -1976,6 +1992,12 @@ Laravel default password rules apply:
 | `GET` | `http://localhost/api/student/messages/{id}` | ✅ student | View own message and replies; marks received messages read |
 | `GET` | `http://localhost/api/student/messages/unread-count` | ✅ student | Student unread message count |
 | `POST` | `http://localhost/api/student/messages/{id}/reply` | ✅ student | Reply to a message received by the student |
+| `GET` | `http://localhost/api/notifications` | ✅ | List own notifications with filters and pagination |
+| `GET` | `http://localhost/api/notifications/recent` | ✅ | Get latest five notifications |
+| `GET` | `http://localhost/api/notifications/unread-count` | ✅ | Get unread notification count |
+| `POST` | `http://localhost/api/notifications/{id}/read` | ✅ | Mark own notification as read |
+| `POST` | `http://localhost/api/notifications/read-all` | ✅ | Mark all own notifications as read |
+| `DELETE` | `http://localhost/api/notifications/{id}` | ✅ | Delete own notification |
 | `GET` | `http://localhost/api/student/id-card` | ✅ student | Full digital ID card data |
 | `GET` | `http://localhost/api/student/fees` | ✅ student | Student fee records and summary |
 | `GET` | `http://localhost/api/student/fees/receipts` | ✅ student | Student payment receipts |

@@ -75,6 +75,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth/me',                  [MobileAuthController::class, 'me']);
     Route::post('auth/password',           [MobileAuthController::class, 'updatePassword']);
     Route::put('auth/password',            [MobileAuthController::class, 'updatePassword']);
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\NotificationController::class, 'index']);
+        Route::get('recent', [\App\Http\Controllers\Api\NotificationController::class, 'recent']);
+        Route::get('unread-count', [\App\Http\Controllers\Api\NotificationController::class, 'unreadCount']);
+        Route::post('read-all', [\App\Http\Controllers\Api\NotificationController::class, 'markAllAsRead']);
+        Route::post('{id}/read', [\App\Http\Controllers\Api\NotificationController::class, 'markAsRead'])->whereNumber('id');
+        Route::delete('{id}', [\App\Http\Controllers\Api\NotificationController::class, 'destroy'])->whereNumber('id');
+    });
 
     // Password reset — requires the special reset_token from verify-otp step
     Route::post('auth/password/reset',     [MobileAuthController::class, 'resetPassword']);
