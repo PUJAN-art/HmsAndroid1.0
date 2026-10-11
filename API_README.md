@@ -18,28 +18,29 @@
 5. [General Login](#4-general-login-all-roles)
 6. [Student Login](#5-student-login-students-only)
 7. [Student Profile](#6-student-profile--protected)
-8. [Logout](#7-logout--protected)
-9. [Get Current User](#8-get-current-user--protected)
-10. [Change Password](#9-change-password--protected)
-11. [Password Reset — Send OTP](#10-password-reset--send-otp)
-12. [Password Reset — Verify OTP](#11-password-reset--verify-otp)
-13. [Password Reset — Set New Password](#12-password-reset--set-new-password--protected)
-14. [Rooms — List All](#13-rooms--list-all)
-15. [Rooms — Available Only](#14-rooms--available-only)
-16. [Rooms — Single Detail](#15-rooms--single-detail)
-17. [Fees — My Fees](#16-fees--my-fees--protected)
-18. [Fees — My Receipts](#17-fees--my-receipts--protected)
-19. [Attendance — My Records](#18-attendance--my-records--protected)
-20. [Attendance — Check In](#19-attendance--check-in--protected)
-21. [Attendance — Check Out](#20-attendance--check-out--protected)
-22. [Complaints — Submit](#21-complaints--submit--protected)
-23. [Complaints — My Complaints](#22-complaints--my-complaints--protected)
-24. [Visitors — Log Request](#23-visitors--log-request--protected)
-25. [Visitors — My Visitors](#24-visitors--my-visitors--protected)
-26. [Notices — List All](#25-notices--list-all--protected)
-27. [Admin Login](#26-admin-login)
-28. [Admin Dashboard](#27-admin-dashboard--protected)
-29. [Error Reference](#error-reference)
+8. [Student Activity Logs](#student-activity-logs-protected)
+9. [Logout](#7-logout--protected)
+10. [Get Current User](#8-get-current-user--protected)
+11. [Change Password](#9-change-password--protected)
+12. [Password Reset — Send OTP](#10-password-reset--send-otp)
+13. [Password Reset — Verify OTP](#11-password-reset--verify-otp)
+14. [Password Reset — Set New Password](#12-password-reset--set-new-password--protected)
+15. [Rooms — List All](#13-rooms--list-all)
+16. [Rooms — Available Only](#14-rooms--available-only)
+17. [Rooms — Single Detail](#15-rooms--single-detail)
+18. [Fees — My Fees](#16-fees--my-fees--protected)
+19. [Fees — My Receipts](#17-fees--my-receipts--protected)
+20. [Attendance — My Records](#18-attendance--my-records--protected)
+21. [Attendance — Check In](#19-attendance--check-in--protected)
+22. [Attendance — Check Out](#20-attendance--check-out--protected)
+23. [Complaints — Submit](#21-complaints--submit--protected)
+24. [Complaints — My Complaints](#22-complaints--my-complaints--protected)
+25. [Visitors — Log Request](#23-visitors--log-request--protected)
+26. [Visitors — My Visitors](#24-visitors--my-visitors--protected)
+27. [Notices — List All](#25-notices--list-all--protected)
+28. [Admin Login](#26-admin-login)
+29. [Admin Dashboard](#27-admin-dashboard--protected)
+30. [Error Reference](#error-reference)
 
 ---
 
@@ -525,6 +526,38 @@ Requires a student Bearer token. Returns the full data needed to render the digi
       "bed_number": "101-2"
     },
     "qr_code_payload": "https://example.com/admin/students/5"
+  }
+}
+```
+
+### Student Activity Logs *(Protected)*
+
+Returns only the authenticated student's activity history, newest first. Requires a student Sanctum token.
+
+**`GET /api/student/activity-logs`**
+
+Optional query parameter: `per_page` (1–100, defaults to 20). Use the standard `page` query parameter to move through results.
+
+**Response `200`**
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 42,
+      "action": "checkin",
+      "module": "Attendance",
+      "model_type": null,
+      "model_id": null,
+      "details": "Mobile check-in at 08:15:00",
+      "created_at": "2026-10-12 08:15:00"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "last_page": 1,
+    "per_page": 20,
+    "total": 1
   }
 }
 ```
@@ -1911,6 +1944,7 @@ Laravel default password rules apply:
 | `POST` | `http://localhost/api/auth/logout` | ✅ | Logout |
 | `GET` | `http://localhost/api/auth/me` | ✅ | Get current user |
 | `GET` | `http://localhost/api/student/profile` | ✅ | Get student profile + room info |
+| `GET` | `http://localhost/api/student/activity-logs` | ✅ student | Own activity history (`page`, optional `per_page`) |
 | `GET` | `http://localhost/api/student/id-card` | ✅ student | Full digital ID card data |
 | `GET` | `http://localhost/api/student/fees` | ✅ student | Student fee records and summary |
 | `GET` | `http://localhost/api/student/fees/receipts` | ✅ student | Student payment receipts |

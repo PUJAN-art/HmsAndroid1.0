@@ -94,6 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('fees/receipts',         [FeeController::class, 'myReceipts']);
         Route::get('fees/payments/{payment}/proof', [FeeController::class, 'showPaymentProof'])->name('api.student.fees.payments.proof');
         Route::post('fees/{fee}/payments',  [FeeController::class, 'submitPayment']);
+        Route::get('activity-logs', [\App\Http\Controllers\Api\ActivityLogController::class, 'index']);
         Route::get('attendance',            [ApiAttendanceController::class, 'myAttendance']);
         Route::post('attendance/checkin',   [ApiAttendanceController::class, 'checkIn']);
         Route::post('attendance/checkout',  [ApiAttendanceController::class, 'checkOut']);
