@@ -1,6 +1,7 @@
 # Hostel Management System — Mobile API Documentation
 
-**Base URL:** `http://localhost`  
+**Production Base URL:** `https://hostelmmp.sital.info.np`
+**Local Development Base URL:** `http://127.0.0.1:8000`
 **API Prefix:** `/api`  
 **Auth:** Laravel Sanctum — Bearer token  
 **Content-Type:** `application/json`  
