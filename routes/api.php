@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Student protected endpoints ───────────────────────────────────────
     Route::prefix('student')->middleware('role:student')->group(function () {
         Route::get('profile',              [MobileAuthController::class, 'studentProfile']);
+        Route::get('id-card',              [\App\Http\Controllers\Api\StudentIdCardController::class, 'show']);
         Route::get('rooms',                [RoomController::class, 'index']);
         Route::get('rooms/available',       [RoomController::class, 'available']);
         Route::get('rooms/{id}',            [RoomController::class, 'show']);

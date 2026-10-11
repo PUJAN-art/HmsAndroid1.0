@@ -487,6 +487,48 @@ Accept: application/json
 | `pending_fees.total` | Total unpaid amount in Rs. |
 | `attendance_this_month` | Present days this calendar month |
 
+**Student ID Card (`GET /api/student/id-card`)**
+
+Requires a student Bearer token. Returns the full data needed to render the digital card, including student identity, academic details, photo/logo URLs, contact information, expiry label, assigned room/bed, and QR payload. `room` is `null` when no bed is assigned.
+
+```json
+{
+  "status": "success",
+  "data": {
+    "card_title": "Student ID Card",
+    "institution_name": "Smart Hostel",
+    "logo_url": "https://example.com/images/logo.jpg",
+    "role": "STUDENT",
+    "student": {
+      "id": 5,
+      "name": "Ram Sharma",
+      "student_id_number": "HMS-00005",
+      "photo_url": null,
+      "department": "Computer",
+      "year": 2,
+      "semester": 4,
+      "blood_group": "B+",
+      "issued_on": "2026-01-01",
+      "expires_on": "2027-01-01",
+      "expiry_label": "Jan 2027",
+      "phone": "9800000000",
+      "emergency_contact_name": "Parent",
+      "emergency_contact": "9800000000"
+    },
+    "room": {
+      "id": 3,
+      "room_number": "101",
+      "type": "standard",
+      "status": "active",
+      "capacity": 2,
+      "bed_id": 7,
+      "bed_number": "101-2"
+    },
+    "qr_code_payload": "https://example.com/admin/students/5"
+  }
+}
+```
+
 ---
 
 ### 7. Logout *(Protected)*
@@ -1789,6 +1831,7 @@ Laravel default password rules apply:
 | `POST` | `http://localhost/api/auth/logout` | ✅ | Logout |
 | `GET` | `http://localhost/api/auth/me` | ✅ | Get current user |
 | `GET` | `http://localhost/api/student/profile` | ✅ | Get student profile + room info |
+| `GET` | `http://localhost/api/student/id-card` | ✅ student | Full digital ID card data |
 | `GET` | `http://localhost/api/student/fees` | ✅ student | Student fee records and summary |
 | `GET` | `http://localhost/api/student/fees/receipts` | ✅ student | Student payment receipts |
 | `GET` | `http://localhost/api/student/attendance` | ✅ student | Student attendance and monthly summary |
