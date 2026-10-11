@@ -853,7 +853,7 @@ php artisan key:generate
 # Run migrations
 php artisan migrate
 
-# Run seeders (if available)
+# Seed demo data for local/testing only
 php artisan db:seed
 
 # Create storage symlink
@@ -867,6 +867,21 @@ php artisan serve
 ```
 
 Website accessible at: `http://localhost:8000`
+
+### Local Demo Accounts
+
+`DatabaseSeeder` skips demo data outside the `local` and `testing` environments. In local development, the seeder creates these accounts (password for each: `password`):
+
+| Role | Email | Sample data |
+|------|-------|-------------|
+| Admin | `admin@hostel.com` | Dashboard, approvals, rooms, fees, notices, and logs |
+| Student | `john@hostel.com` | Assigned room, fees/receipt, attendance, complaints, feedback, visitor, messages, and notices |
+| Pending student | `pending@hostel.com` | Pending registration and approval flow |
+| Student with pending room request | `requests@hostel.com` | Room request history and pending state |
+| Unassigned student | `unassigned@hostel.com` | Submit a new room request and test the no-room state |
+| Visitor | `visitor@hostel.com` | Approved visitor account for visitor-role checks |
+
+Run `php artisan db:seed` again to restore/update demo records. Demo credentials are for local testing only; never use them in production.
 
 ---
 
