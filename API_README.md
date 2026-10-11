@@ -1012,6 +1012,47 @@ GET http://localhost/api/fees/my?type=monthly&status=overdue
 }
 ```
 
+#### Submit a fee payment
+
+Submit the full payable amount with an image of the bank statement/payment proof. The API does not mark a fee paid immediately; an admin must review the submission.
+
+**`POST /api/student/fees/{fee}/payments`**
+
+The equivalent alias **`POST /api/fees/{fee}/payments`** is also available. Both require a student Sanctum token and `multipart/form-data`.
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `amount` | decimal | ✅ | Must exactly match the fee's payable amount, provided by `GET /api/fees/my` |
+| `method` | string | ✅ | `esewa`, `khalti`, `bank_transfer`, or `other` |
+| `proof` | image file | ✅ | JPG, JPEG, PNG, or WebP; maximum 5 MB |
+| `remark` | string | ✅ | Student note, maximum 1000 characters |
+
+The payment date is assigned by the server. A fee cannot have more than one payment awaiting review. A rejected payment can be resubmitted; a paid fee cannot.
+
+**Response `201`**
+```json
+{
+  "status": "success",
+  "message": "Payment proof submitted and is awaiting admin review.",
+  "payment": {
+    "receipt_id": 12,
+    "fee_id": 10,
+    "amount_paid": 2000.00,
+    "payment_date": "2026-10-12",
+    "method": "bank_transfer",
+    "transaction_id": null,
+    "status": "pending",
+    "proof_url": "http://localhost/api/student/fees/payments/12/proof",
+    "student_remark": "October hostel fee transfer",
+    "admin_remark": null,
+    "issued_at": "2026-10-12 10:30:00"
+  }
+}
+```
+
+**Response `422`** is returned for an amount mismatch, invalid proof, missing field, or an existing pending submission.
+The proof URL is protected; fetch it with the student's bearer token. Admins can view submitted proof from the web fee management page.
+
 ---
 
 ### 17. Fees — My Receipts *(Protected)*

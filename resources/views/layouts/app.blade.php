@@ -133,6 +133,14 @@
                         </a>
                     @elseif(Auth::user()->role === 'admin')
                         <!-- Admin Navigation Items -->
+                        <a href="{{ route('admin.fees.payments.index') }}" class="flex items-center px-3 py-1.5 text-white hover:bg-[#2a4a7f] text-[13px] transition-colors {{ request()->routeIs('admin.fees.payments.*') ? 'bg-[#2a4a7f] text-white' : '' }}">
+                            <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h2m4 0h2m-9 5h12a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            Fee Payments
+                            @php($pendingFeePayments = \App\Models\Payment::where('status', 'pending')->count())
+                            @if($pendingFeePayments > 0)
+                                <span class="ml-auto rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">{{ $pendingFeePayments }}</span>
+                            @endif
+                        </a>
                          <a href="{{ route('admin.rooms.index') }}" class="flex items-center px-3 py-1.5 text-white hover:bg-[#2a4a7f] text-[13px] transition-colors {{ request()->routeIs('admin.rooms.*') ? 'bg-[#2a4a7f] text-white' : '' }}">
                             <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                             {{ __('Rooms') }}

@@ -67,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::resource('visitors', \App\Http\Controllers\VisitorController::class)->only(['index', 'store', 'update']);
+        Route::get('/fees/payments', [\App\Http\Controllers\FeeController::class, 'paymentReviews'])->name('fees.payments.index');
+        Route::get('/fees/payments/{payment}/proof', [\App\Http\Controllers\FeeController::class, 'showPaymentProof'])->name('fees.payments.proof');
+        Route::post('/fees/payments/{payment}/review', [\App\Http\Controllers\FeeController::class, 'reviewPayment'])->name('fees.payments.review');
         Route::resource('fees', \App\Http\Controllers\FeeController::class)->only(['index', 'show']);
         Route::resource('rooms', \App\Http\Controllers\RoomController::class);
         Route::resource('notices', \App\Http\Controllers\NoticeController::class);
@@ -178,6 +181,7 @@ Route::middleware(['auth'])->group(function () {
         // Detailed Views
         Route::get('/room', [StudentController::class, 'room'])->name('room');
         Route::get('/fees', [StudentController::class, 'fees'])->name('fees');
+        Route::post('/fees/payments', [\App\Http\Controllers\FeeController::class, 'submitPayment'])->name('fees.payments.store');
         Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'studentIndex'])->name('attendance');
 
         // ID Card

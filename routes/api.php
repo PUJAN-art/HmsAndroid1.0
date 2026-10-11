@@ -92,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('room-requests/{id}', [\App\Http\Controllers\Api\RoomRequestController::class, 'cancel']);
         Route::get('fees',                  [FeeController::class, 'myFees']);
         Route::get('fees/receipts',         [FeeController::class, 'myReceipts']);
+        Route::get('fees/payments/{payment}/proof', [FeeController::class, 'showPaymentProof'])->name('api.student.fees.payments.proof');
+        Route::post('fees/{fee}/payments',  [FeeController::class, 'submitPayment']);
         Route::get('attendance',            [ApiAttendanceController::class, 'myAttendance']);
         Route::post('attendance/checkin',   [ApiAttendanceController::class, 'checkIn']);
         Route::post('attendance/checkout',  [ApiAttendanceController::class, 'checkOut']);
@@ -107,6 +109,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('fees')->group(function () {
         Route::get('my',       [FeeController::class, 'myFees']);      // GET /api/fees/my
         Route::get('receipts', [FeeController::class, 'myReceipts']);  // GET /api/fees/receipts
+        Route::post('{fee}/payments', [FeeController::class, 'submitPayment'])
+            ->middleware('role:student'); // POST /api/fees/{fee}/payments
     });
 
     Route::middleware('role:student')->group(function () {

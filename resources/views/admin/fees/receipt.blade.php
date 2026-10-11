@@ -31,13 +31,13 @@
                     <tbody>
                         <tr>
                             <td class="py-2">{{ ucfirst($fee->type) }} Fee</td>
-                            <td class="text-right py-2">${{ number_format($fee->amount, 2) }}</td>
+                            <td class="text-right py-2">Rs {{ number_format($fee->amount, 2) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr class="border-t font-bold">
                             <td class="py-2">Total</td>
-                            <td class="text-right py-2">${{ number_format($fee->amount, 2) }}</td>
+                            <td class="text-right py-2">Rs {{ number_format($fee->amount, 2) }}</td>
                         </tr>
                     </tfoot>
                 </table>
