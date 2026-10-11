@@ -369,6 +369,8 @@ No auth required.
 
 Returns the fully authenticated student's details including assigned room, bed, pending fees summary, and attendance count for the current month.
 
+Profile updates use `POST /api/student/profile` with `multipart/form-data`, matching the student web profile form. Supported fields are `phone` (nullable string, max 20 characters), `address` (nullable string, max 255 characters), and optional `profile_photo` (image, max 1 MB). The update response includes the saved phone, address, and public photo URL; other student/account fields are read-only through this endpoint.
+
 **`GET /api/student/profile`**
 
 Requires `Authorization: Bearer {token}`
@@ -641,7 +643,7 @@ Requires `Authorization: Bearer {token}`
 
 Change password while logged in. Requires the current password.
 
-**`PUT /api/auth/password`**
+**`POST /api/auth/password`** (also available as `PUT /api/auth/password`)
 
 Requires `Authorization: Bearer {token}`
 
@@ -1968,6 +1970,7 @@ Laravel default password rules apply:
 | `POST` | `http://localhost/api/auth/logout` | ✅ | Logout |
 | `GET` | `http://localhost/api/auth/me` | ✅ | Get current user |
 | `GET` | `http://localhost/api/student/profile` | ✅ | Get student profile + room info |
+| `POST` | `http://localhost/api/student/profile` | ✅ student | Update phone, address, and optional profile photo |
 | `GET` | `http://localhost/api/student/activity-logs` | ✅ student | Own activity history (`page`, optional `per_page`) |
 | `GET` | `http://localhost/api/student/messages/inbox` | ✅ student | Student message inbox with pagination |
 | `GET` | `http://localhost/api/student/messages/{id}` | ✅ student | View own message and replies; marks received messages read |
@@ -1988,6 +1991,7 @@ Laravel default password rules apply:
 | `POST` | `http://localhost/api/attendance/checkout` | ✅ | Record today's check-out time |
 | `POST` | `http://localhost/api/complaints` | ✅ | Submit a new complaint |
 | `GET` | `http://localhost/api/complaints/my` | ✅ | View own complaints with status |
+| `POST` | `http://localhost/api/auth/password` | ✅ | Change password (POST; PUT is also supported) |
 | `PUT` | `http://localhost/api/auth/password` | ✅ | Change password |
 | `POST` | `http://localhost/api/auth/password/send-otp` | ❌ | Send reset OTP |
 | `POST` | `http://localhost/api/auth/password/verify-otp` | ❌ | Verify OTP |

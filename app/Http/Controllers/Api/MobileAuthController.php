@@ -339,6 +339,46 @@ class MobileAuthController extends Controller
     }
 
     // ----------------------------------------------------------------
+    // POST /api/student/profile (requires auth:sanctum, students only)
+    // Updates the same editable fields as the student web profile form.
+    // ----------------------------------------------------------------
+    public function updateStudentProfile(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'phone' => ['sometimes', 'nullable', 'string', 'max:20'],
+            'address' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'profile_photo' => ['sometimes', 'nullable', 'image', 'max:1024'],
+        ]);
+
+        $user = $request->user();
+        $data = collect($validated)->only(['phone', 'address'])->all();
+
+        if ($request->hasFile('profile_photo')) {
+            $data['profile_photo_path'] = $request->file('profile_photo')->store('profile-photos', 'public');
+        }
+
+        if ($data !== []) {
+            $user->update($data);
+        }
+
+        $user->refresh();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully.',
+            'student' => [
+                'id' => $user->id,
+                'phone' => $user->phone,
+                'contact' => $user->phone,
+                'address' => $user->address,
+                'profile_photo_url' => $user->profile_photo_path
+                    ? asset('storage/'.$user->profile_photo_path)
+                    : null,
+            ],
+        ]);
+    }
+
+    // ----------------------------------------------------------------
     // POST /api/auth/logout   (requires auth:sanctum)
     // ----------------------------------------------------------------
     public function logout(Request $request): JsonResponse

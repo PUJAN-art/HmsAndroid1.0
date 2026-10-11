@@ -73,6 +73,7 @@ Route::prefix('rooms')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/logout',             [MobileAuthController::class, 'logout']);
     Route::get('auth/me',                  [MobileAuthController::class, 'me']);
+    Route::post('auth/password',           [MobileAuthController::class, 'updatePassword']);
     Route::put('auth/password',            [MobileAuthController::class, 'updatePassword']);
 
     // Password reset — requires the special reset_token from verify-otp step
@@ -81,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Student protected endpoints ───────────────────────────────────────
     Route::prefix('student')->middleware('role:student')->group(function () {
         Route::get('profile',              [MobileAuthController::class, 'studentProfile']);
+        Route::post('profile',             [MobileAuthController::class, 'updateStudentProfile']);
         Route::get('id-card',              [\App\Http\Controllers\Api\StudentIdCardController::class, 'show']);
         Route::get('rooms',                [RoomController::class, 'index']);
         Route::get('rooms/available',       [RoomController::class, 'available']);
