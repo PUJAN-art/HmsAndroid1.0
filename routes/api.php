@@ -95,6 +95,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('fees/payments/{payment}/proof', [FeeController::class, 'showPaymentProof'])->name('api.student.fees.payments.proof');
         Route::post('fees/{fee}/payments',  [FeeController::class, 'submitPayment']);
         Route::get('activity-logs', [\App\Http\Controllers\Api\ActivityLogController::class, 'index']);
+        Route::prefix('messages')->group(function () {
+            Route::get('inbox', [\App\Http\Controllers\Api\MessageController::class, 'inbox']);
+            Route::get('unread-count', [\App\Http\Controllers\Api\MessageController::class, 'unreadCount']);
+            Route::get('{id}', [\App\Http\Controllers\Api\MessageController::class, 'show'])->whereNumber('id');
+            Route::post('{id}/reply', [\App\Http\Controllers\Api\MessageController::class, 'reply'])->whereNumber('id');
+        });
         Route::get('attendance',            [ApiAttendanceController::class, 'myAttendance']);
         Route::post('attendance/checkin',   [ApiAttendanceController::class, 'checkIn']);
         Route::post('attendance/checkout',  [ApiAttendanceController::class, 'checkOut']);

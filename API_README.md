@@ -19,28 +19,29 @@
 6. [Student Login](#5-student-login-students-only)
 7. [Student Profile](#6-student-profile--protected)
 8. [Student Activity Logs](#student-activity-logs-protected)
-9. [Logout](#7-logout--protected)
-10. [Get Current User](#8-get-current-user--protected)
-11. [Change Password](#9-change-password--protected)
-12. [Password Reset — Send OTP](#10-password-reset--send-otp)
-13. [Password Reset — Verify OTP](#11-password-reset--verify-otp)
-14. [Password Reset — Set New Password](#12-password-reset--set-new-password--protected)
-15. [Rooms — List All](#13-rooms--list-all)
-16. [Rooms — Available Only](#14-rooms--available-only)
-17. [Rooms — Single Detail](#15-rooms--single-detail)
-18. [Fees — My Fees](#16-fees--my-fees--protected)
-19. [Fees — My Receipts](#17-fees--my-receipts--protected)
-20. [Attendance — My Records](#18-attendance--my-records--protected)
-21. [Attendance — Check In](#19-attendance--check-in--protected)
-22. [Attendance — Check Out](#20-attendance--check-out--protected)
-23. [Complaints — Submit](#21-complaints--submit--protected)
-24. [Complaints — My Complaints](#22-complaints--my-complaints--protected)
-25. [Visitors — Log Request](#23-visitors--log-request--protected)
-26. [Visitors — My Visitors](#24-visitors--my-visitors--protected)
-27. [Notices — List All](#25-notices--list-all--protected)
-28. [Admin Login](#26-admin-login)
-29. [Admin Dashboard](#27-admin-dashboard--protected)
-30. [Error Reference](#error-reference)
+9. [Student Messages](#student-messages-protected)
+10. [Logout](#7-logout--protected)
+11. [Get Current User](#8-get-current-user--protected)
+12. [Change Password](#9-change-password--protected)
+13. [Password Reset — Send OTP](#10-password-reset--send-otp)
+14. [Password Reset — Verify OTP](#11-password-reset--verify-otp)
+15. [Password Reset — Set New Password](#12-password-reset--set-new-password--protected)
+16. [Rooms — List All](#13-rooms--list-all)
+17. [Rooms — Available Only](#14-rooms--available-only)
+18. [Rooms — Single Detail](#15-rooms--single-detail)
+19. [Fees — My Fees](#16-fees--my-fees--protected)
+20. [Fees — My Receipts](#17-fees--my-receipts--protected)
+21. [Attendance — My Records](#18-attendance--my-records--protected)
+22. [Attendance — Check In](#19-attendance--check-in--protected)
+23. [Attendance — Check Out](#20-attendance--check-out--protected)
+24. [Complaints — Submit](#21-complaints--submit--protected)
+25. [Complaints — My Complaints](#22-complaints--my-complaints--protected)
+26. [Visitors — Log Request](#23-visitors--log-request--protected)
+27. [Visitors — My Visitors](#24-visitors--my-visitors--protected)
+28. [Notices — List All](#25-notices--list-all--protected)
+29. [Admin Login](#26-admin-login)
+30. [Admin Dashboard](#27-admin-dashboard--protected)
+31. [Error Reference](#error-reference)
 
 ---
 
@@ -561,6 +562,29 @@ Optional query parameter: `per_page` (1–100, defaults to 20). Use the standard
   }
 }
 ```
+
+---
+
+### Student Messages *(Protected)*
+
+These student-only endpoints provide the same inbox, message-read, unread-count, and reply behavior as the student web inbox. Send the Sanctum token in the `Authorization: Bearer <token>` header.
+
+**`GET /api/student/messages/inbox`** returns the latest 15 messages addressed to the student, newest first, with `data` and `pagination`.
+
+**`GET /api/student/messages/{id}`** returns a message and its replies. Viewing a message addressed to the student marks it as read and updates the unread count.
+
+**`GET /api/student/messages/unread-count`** returns `{"status":"success","unread_count":2}`.
+
+**`POST /api/student/messages/{id}/reply`** replies to a message addressed to the authenticated student.
+
+Request body:
+```json
+{
+  "message": "Thank you for the update."
+}
+```
+
+Successful replies return HTTP `201` with the created message in `data`. The API uses the same notifications and audit logging as the web reply flow. Students can only view or reply to messages in which they are the sender or recipient, and can reply only to messages they received.
 
 ---
 
@@ -1945,6 +1969,10 @@ Laravel default password rules apply:
 | `GET` | `http://localhost/api/auth/me` | ✅ | Get current user |
 | `GET` | `http://localhost/api/student/profile` | ✅ | Get student profile + room info |
 | `GET` | `http://localhost/api/student/activity-logs` | ✅ student | Own activity history (`page`, optional `per_page`) |
+| `GET` | `http://localhost/api/student/messages/inbox` | ✅ student | Student message inbox with pagination |
+| `GET` | `http://localhost/api/student/messages/{id}` | ✅ student | View own message and replies; marks received messages read |
+| `GET` | `http://localhost/api/student/messages/unread-count` | ✅ student | Student unread message count |
+| `POST` | `http://localhost/api/student/messages/{id}/reply` | ✅ student | Reply to a message received by the student |
 | `GET` | `http://localhost/api/student/id-card` | ✅ student | Full digital ID card data |
 | `GET` | `http://localhost/api/student/fees` | ✅ student | Student fee records and summary |
 | `GET` | `http://localhost/api/student/fees/receipts` | ✅ student | Student payment receipts |
